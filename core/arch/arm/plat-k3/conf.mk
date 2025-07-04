@@ -2,6 +2,19 @@ CFG_WITH_STATS ?= y
 CFG_CRYPTO_WITH_CE ?= y
 CFG_CONSOLE_UART ?= 0
 
+CFG_DT ?= y
+CFG_DRIVERS_PINCTRL ?= y
+CFG_PINCTRL_SINGLE ?= y
+
+flavor_dts_file-am62x = k3-am625-sk.dts
+
+ifneq ($(PLATFORM_FLAVOR),)
+ifeq ($(flavor_dts_file-$(PLATFORM_FLAVOR)),)
+$(error Invalid platform flavor $(PLATFORM_FLAVOR))
+endif
+CFG_EMBED_DTB_SOURCE_FILE ?= $(flavor_dts_file-$(PLATFORM_FLAVOR))
+endif
+
 ifeq ($(PLATFORM_FLAVOR),am62lx)
 CFG_TZDRAM_START ?= 0x80200000
 CFG_TZDRAM_SIZE ?= 0x00400000 # 20MB
@@ -26,6 +39,7 @@ $(call force,CFG_ARM_GICV3,y)
 $(call force,CFG_CORE_LARGE_PHYS_ADDR,y)
 $(call force,CFG_K3_OTP_KEYWRITING,y)
 $(call force,CFG_CORE_ARM64_PA_BITS,36)
+$(call force,CFG_DRIVERS_PINCTRL,y)
 
 ifneq (,$(filter ${PLATFORM_FLAVOR},am65x))
 $(call force,CFG_CORE_CLUSTER_SHIFT,1)
