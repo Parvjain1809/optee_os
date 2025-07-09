@@ -45,6 +45,9 @@
 
 #include <platform_config.h>
 
+#include <drivers/omap_i2c.h>
+#include <../plat-k3/drivers/tmp100.h>
+
 #if !defined(CFG_WITH_ARM_TRUSTED_FW)
 #include <sm/sm.h>
 #endif
@@ -1089,10 +1092,20 @@ void __weak boot_init_primary_runtime(void)
 
 void __weak boot_init_primary_final(void)
 {
+	int temp = 0;
+	TEE_Result res = TEE_SUCCESS;
+
 	if (!IS_ENABLED(CFG_NS_VIRTUALIZATION))
 		call_driver_initcalls();
 
 	call_finalcalls();
+
+	res = tmp100_read_temp(&temp);
+	if (res == TEE_SUCCESS) {
+		// IMSG("TMP100 temperature: 0x%04x", temp);
+	} else {
+		// IMSG("TMP100 : Failed to read temperature (res=0x%x)", res);
+	}
 
 	IMSG("Primary CPU switching to normal world boot");
 
