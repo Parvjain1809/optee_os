@@ -5,6 +5,8 @@ CFG_CONSOLE_UART ?= 0
 CFG_DT ?= y
 CFG_DRIVERS_PINCTRL ?= y
 CFG_PINCTRL_SINGLE ?= y
+CFG_DRIVERS_I2C ?= y
+CFG_OMAP_I2C ?= y
 
 flavor_dts_file-am62x = k3-am625-sk.dts
 
